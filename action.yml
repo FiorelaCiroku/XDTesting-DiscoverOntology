@@ -1,0 +1,54 @@
+# This is an action that is able to find ontologies in GitHub repositories.
+# Trigger: On call
+# Input: 
+# Output: A JSON file with the path of the ontologies
+
+# The name of the action
+name: Discover ontologies
+
+# Description of the action
+description: This action is able to find ontologies in a GitHub repository. 
+
+# Action icon and color
+branding:
+  icon: 'box'  
+  color: 'blue'
+
+runs:
+  using: "composite"
+  # Steps that will be executed as part of the job
+  steps:
+            
+  # Checks-out your repository under $GITHUB_WORKSPACE, so the job can access it
+    - uses: actions/checkout@v2
+
+
+  # Gets a list of files with the required extensions
+    - name: Run bash script
+      shell: bash
+      run: find . -name '*.owl' -o -name '*.rdf' >> OntologyList.txt
+        
+  # Install brew
+    - name: Install Brew
+      shell: bash
+      run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+  # install jq package
+    - name: Install jq
+      shell: bash
+      run: brew install jq
+        
+  # Create JSON file from txt file
+    - name: Create JSON
+      shell: bash
+      run: jq -Rs '[ split("\n")[] | select(length > 0) | split(",") | {OntologyPath:.[0]} ]' OntologyList.txt > OntologyList.json
+        
+  # Print JSON
+    - name: Print ontology list in JSON
+      shell: bash
+      run: cat OntologyList.json
+
+              
+  # This step creates an automatic pull request for the directories that were created.      
+    - name: Pull-to-master
+      uses: peter-evans/create-pull-request@v3
