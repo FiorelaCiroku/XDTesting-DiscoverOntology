@@ -7,6 +7,6 @@ Add the following entry to your Github workflow YAML file:
 ```
 steps:
   - name: XDTesting Discover Ontology
-    uses: FiorelaCiroku/XDTesting-DiscoverOntology@v1.0.0
+    uses: FiorelaCiroku/XDTesting-DiscoverOntology@v1.0.1
   
 ```
