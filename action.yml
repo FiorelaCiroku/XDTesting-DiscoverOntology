@@ -26,7 +26,7 @@ runs:
   # Gets a list of files with the required extensions
     - name: Run bash script
       shell: bash
-      run: find . -name '*.owl' -o -name '*.rdf' >> OntologyList.txt
+      run: find . -name '*.owl' -o -name '*.rdfs' >> OntologyList.txt
         
   # Install brew
     - name: Install Brew
